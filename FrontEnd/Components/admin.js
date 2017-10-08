@@ -1,10 +1,11 @@
 angular.module('app')
-    .controller('adminCtrl', function($scope) {
+//we defined this varibals to be global for the others functions 
+    .controller('adminCtrl', function($scope, $http) {
         $scope.appointmentDate;
         $scope.appointmentTime;
 				$scope.appointments;
 				$scope.counter = 0;
-
+// it's for add new avalibal appointment 
         $scope.addApointment = function() {
             $scope.appointmentDate = $('#addeddateappointment').val();
             $scope.appointmentTime = $('#addedtimeappointment').val();
@@ -28,7 +29,7 @@ angular.module('app')
                 }
             })
         };
-
+// it will print the reserved appointments from the database
         $scope.loadAppointments = function(name) {
             console.log('loadAppointments run');
             $.ajax({
@@ -37,12 +38,29 @@ angular.module('app')
                 dataType: 'json',
 								async: false,
                 success: function(data) {
-									console.log('++++++++++++++');
+									console.log('++++++++++++++', data);
                     $scope.appointments = data.reservedAppointments;
                 }
             })
         }
     })
+    
+
+    //     $scope.deleteAppointment = (appointment) => {
+    //         console.log('asdasdasdasd;as;kdmas;kdmja;sj', appointment)
+    //         $.ajax({
+    //             url: '/deleteAppointment',
+    //             method: 'DELETE',
+    //             dataType: 'json',
+    //             data: {
+    //                 reservedAppointment: appointment
+    //             },
+    //             success: () => {
+    //                 console.log('hahahahahah')
+    //             }
+    //         })
+    //     }
+    // })
     .component('admin', {
         controller: "adminCtrl",
         templateUrl: `./views/admin.html`

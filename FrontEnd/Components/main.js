@@ -4,7 +4,7 @@ angular.module('app')
     $scope.doctors;
     $scope.currentDoctor;
     $scope.timeA;
-
+// load the doctors informations from the database 
     $scope.loadPage=function (){
       $.ajax({
         url:'/getDoctors',
@@ -17,9 +17,9 @@ angular.module('app')
       })
     };
 
-    // Get doctor data
+    // Get doctor data and the rest doctors 
     $scope.getDoctorData = function(name) {
-      console.log('55555555555555555', name);
+      console.log('555555555555555557', $scope.timeA);
       $.ajax({
         url:'/getDoctorData',
         method:'POST',
@@ -35,9 +35,9 @@ angular.module('app')
       });
       console.log('ssssssssssssssssssssssss');
     }
-
+//it's for submit the paitent information and reserved appointment  
     $scope.reserveAppointment =function (time){
-
+      console.log('1111111111111111', $scope.timeA)
       var petientName= $("#pName").val();
       var petientPhone= $("#pPhon").val();
       $.ajax({
@@ -45,15 +45,19 @@ angular.module('app')
         method:'PUT',
         dataType:'json',
         data:{
-          patientName: petientName,
-          patientPhone: petientPhone,
-          availableAppointments: $scope.timeA
+          username: $scope.currentDoctor.username,
+          reservedAppointment:{
+            patientName: petientName,
+            patientPhone: petientPhone,
+            availableAppointments: $scope.timeA
+          }
         },
         success:function(){
          console.log('------------> yaaaaaaaaaaaaaaaaay');
         }
       })
     };
+    // when you click on a doctor this function will show the specific doctor  
     $scope.showDoctorAppointments = function (name){
       var currentDoctors = $scope.doctors;
       for (var i = 0; i < currentDoctors.length; i++) {

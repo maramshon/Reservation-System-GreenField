@@ -1,34 +1,37 @@
 var express = require('express');
-var bcrypt = require('bcrypt');
 var mongoose = require('mongoose');
+
+//MiddleWare
 var morgan = require('morgan');
 var bodyParser = require('body-parser');
+
+
 var app = express();
-var session = require('express-session')
-var cookieParser = require('cookie-parser')
-    // var path = require('path');
 var db = require('./Database/db');
+var session = require('express-session')
+
+
 var jwt = require('jwt-simple');
 var multer = require('multer');
 var upload = multer({
     dest: './FrontEnd/uploads/'
-});
-app.use(morgan('dev'));
+}); //fix this
 
+
+app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({
     extended: true
 }));
 app.use(bodyParser.json());
 
-app.use(cookieParser());
 
-// var loggedIn = false;
 //make session
 app.use(session({
     secret: "asynco",
     resave: false,
     saveUninitialized: true
 }));
+
 
 // static files inside FrontEnd folder
 app.use(express.static(__dirname + '/./FrontEnd'));
@@ -48,21 +51,21 @@ app.get('/index', (req, res) => {
 
 
 //add reservedAppoinment 
-app.post('/reservedappointments', function(req, res) {
+// app.post('/reservedappointments', function(req, res) {
 
-    var patient = {
-        patientName: req.body.patientName,
-        phoneNumber: req.body.phoneNumber,
-    };
-    var newpatient = new db(patient);
-    newpatient.save()
-        .then(item => {
-            res.send("item saved to database")
-        })
-        .catch(err => {
-            res.status(400).send("unable to save to database")
-        })
-});
+//     var patient = {
+//         patientName: req.body.patientName,
+//         phoneNumber: req.body.phoneNumber,
+//     };
+//     var newpatient = new db(patient);
+//     newpatient.save()
+//     .then(item => {
+//         res.send("item saved to database")
+//     })
+//     .catch(err => {
+//         res.status(400).send("unable to save to database")
+//     })
+// });
 
 // get login page 
 app.get('/login', function(req, res) {
@@ -119,11 +122,16 @@ app.post('/login', function(req, res) {
         if (!user) {
             return res.status(404).send();
         }
-        if (user) {
+        else {
             // Create session
-            req.session.username = user.username;
-            console.log('---------------------> ', req.session);
-            res.redirect('/index')
+            if(password=== user.password){
+                req.session.username = user.username;
+                console.log('---------------------> ', req.session);
+                res.redirect('/index') 
+            }else{
+                res.redirect('/login')
+
+            }
         }
     })
 
@@ -144,17 +152,18 @@ app.post('/signup', upload.any(), function(req, res) {
         password: req.body.password,
         phoneNumber: req.body.phoneNumber,
         specilization: req.body.specilization,
-        image: req.files[0].filename
+        // image: req.files[0].filename,
+        location:req.body.location
     };
     console.log(adduser.image);
     var user = new db(adduser);
     user.save()
-        .then(item => {
-            res.redirect("/login")
-        })
-        .catch(err => {
-            res.status(400).send("unable to save to database")
-        })
+    .then(item => {
+        res.redirect("/login")
+    })
+    .catch(err => {
+        res.status(400).send("unable to save to database")
+    })
 });
 
 // Sign Up GET
@@ -188,44 +197,44 @@ app.put("/reservedappointments", function(req, res) {
     var theAppointment = {
       time: fullAppointment[0],
       date: fullAppointment[1]
+  }
+  req.body.reservedAppointment.availableAppointments = theAppointment;
+  db.update({
+    username: req.body.username
+}, {
+    $pull: {
+        availableAppointments: req.body.reservedAppointment.availableAppointments
     }
-    req.body.reservedAppointment.availableAppointments = theAppointment;
-    db.update({
-        username: req.body.username
-    }, {
-        $pull: {
-            availableAppointments: req.body.reservedAppointment.availableAppointments
-        }
-    }, function(err, updateUser) {
-        if (err) {
-            console.log(err)
-        } else {
+}, function(err, updateUser) {
+    if (err) {
+        console.log(err)
+    } else {
 
-            console.log('pull successfully', updateUser)
-            console.log(updateUser)
-        }
-    });
-    db.update({
-        username: req.body.username
-    }, {
-        $push: {
-            reservedAppointments: req.body.reservedAppointment
-        }
-    }, function(err, updateUser) {
-        if (err) {
-            console.log(err)
-        } else {
-            console.log('push to reservedAppointments')
-            console.log(updateUser)
-        }
-    })
-    res.send("updateUser")
+        console.log('pull successfully', updateUser)
+        console.log(updateUser)
+    }
+});
+  db.update({
+    username: req.body.username
+}, {
+    $push: {
+        reservedAppointments: req.body.reservedAppointment
+    }
+}, function(err, updateUser) {
+    if (err) {
+        console.log(err)
+    } else {
+        console.log('push to reservedAppointments')
+        console.log(updateUser)
+    }
 })
- 
+  res.send("updateUser")
+})
+
 
  // delete reserved appoinment 
-app.delete('/deleteAppointment' , function (req , res) {
-	/* body... */
+ app.delete('/deleteAppointment' , function (req , res) {
+    /* body... */
     console.log('***********>>', req.body, req.session.username)
     var theAppointment = {
         availableAppointments: req.body.reservedAppointment.availableAppointments,
@@ -234,7 +243,7 @@ app.delete('/deleteAppointment' , function (req , res) {
     }
     req.body.reservedAppointment = theAppointment;
     console.log('xxxxxxxxxxxxx>', req.body.reservedAppointment)
-	 db.update({
+    db.update({
         username: req.session.username
     }, {
         $pull: {
@@ -249,14 +258,15 @@ app.delete('/deleteAppointment' , function (req , res) {
             console.log(updateUser)
         }
     });
-})
+}) //if we have time we will fix it
 
 
 
 
 //************************************
 // listen to port 2036 
-var port = process.env.PORT || 2036
+var port = process.env.PORT || 3000
 app.listen(port, () => {
     console.log('Server listening on port ', port)
 });
+

@@ -144,7 +144,7 @@ app.post('/signup', upload.any(), function(req, res) {
         password: req.body.password,
         phoneNumber: req.body.phoneNumber,
         specilization: req.body.specilization,
-        image: req.files[0].filename
+        //image: req.files[0].filename
     };
     console.log(adduser.image);
     var user = new db(adduser);

@@ -36,7 +36,7 @@ angular.module('app')
                 url: '/getDoctorReservedAppointments',
                 method: 'GET',
                 dataType: 'json',
-								async: false,
+				async: false,
                 success: function(data) {
 									console.log('++++++++++++++', data);
                     $scope.appointments = data.reservedAppointments;

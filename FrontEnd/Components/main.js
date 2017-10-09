@@ -40,6 +40,7 @@ angular.module('app')
       console.log('1111111111111111', $scope.timeA)
       var petientName= $("#pName").val();
       var petientPhone= $("#pPhon").val();
+      var patientCase=$("#pcase").val();
       $.ajax({
         url:'/reservedappointments',
         method:'PUT',
@@ -49,6 +50,7 @@ angular.module('app')
           reservedAppointment:{
             patientName: petientName,
             patientPhone: petientPhone,
+            petientCase :patientCase,
             availableAppointments: $scope.timeA
           }
         },
@@ -69,6 +71,22 @@ angular.module('app')
         }
       }
     }
+    //send review when petient press on submit the review
+    $scope.sendReview=function (){
+      var review= $('#review').val();
+      $.ajax({
+        url:'/sendReview',
+        method:'POST',
+        dataType:'json',
+        data:{
+          username: $scope.currentDoctor.username,
+          review: review
+        },
+        success:function(data){
+          console.log('success to send ', data)
+        }
+      })
+    };
  })
  .component('main', {
   controller:"AppCtrl",

@@ -43,6 +43,20 @@ angular.module('app')
                 }
             })
         }
+        
+        //get the reviews when the page is loaded from the database
+         $scope.getreviews=function(){
+            $.ajax({
+                url:'/getreviws',
+                method:'GET',
+                dataType:'json',
+                async:false,
+                success:function(data){
+                    console.log('data is comen: ',data)
+                    $scope.reviews = data.reviews;
+                }
+            })
+        }
     })
     
 
@@ -60,7 +74,7 @@ angular.module('app')
     //             }
     //         })
     //     }
-    // })
+   
     .component('admin', {
         controller: "adminCtrl",
         templateUrl: `./views/admin.html`

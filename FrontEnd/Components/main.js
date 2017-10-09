@@ -40,7 +40,7 @@ angular.module('app')
       console.log('1111111111111111', $scope.timeA)
       var petientName= $("#pName").val();
       var petientPhone= $("#pPhon").val();
-      var patientCase=$("#pcase").val();
+      var petientCase=$("#pcase").val();
       $.ajax({
         url:'/reservedappointments',
         method:'PUT',
@@ -50,7 +50,7 @@ angular.module('app')
           reservedAppointment:{
             patientName: petientName,
             patientPhone: petientPhone,
-            petientCase :patientCase,
+            patientCase :petientCase,
             availableAppointments: $scope.timeA
           }
         },

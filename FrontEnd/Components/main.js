@@ -87,8 +87,25 @@ angular.module('app')
         }
       })
     };
+
+    $scope.recieveReply=function(){
+      console.log($scope.doctors)
+ 
+    };
  })
  .component('main', {
   controller:"AppCtrl",
    templateUrl: `./views/main.html`
  })
+    // $.ajax({
+     //  url:'/patientReply',
+     //  method:'GET',
+     //  data:{
+     //    patientName :patientName
+     //  },
+     //  async:false,
+     //  success:function(data){
+     //    console.log(data);
+
+     //  }
+     // })

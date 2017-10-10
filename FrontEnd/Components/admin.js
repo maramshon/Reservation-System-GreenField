@@ -1,14 +1,35 @@
 angular.module('app')
 //we defined this varibals to be global for the others functions 
-    .controller('adminCtrl', function($scope, $http) {
-        $scope.appointmentDate;
-        $scope.appointmentTime;
-				$scope.appointments;
-				$scope.counter = 0;
+.controller('adminCtrl', function($scope, $http) {
+    $scope.appointmentDate;
+    $scope.appointmentTime;
+    $scope.appointments;
+    $scope.counter = 0;
+
+//function send the reply from doctor to patient to server.
+    $scope.sendReply=function(patientName){
+     
+        console.log(patientName);
+        var reply=$('#data').val();
+        $.ajax({
+            url:'/doctorReply',
+            method:"POST",
+            dataType: 'json',
+            async:false,
+            data:{
+                patientName: patientName,
+                reply:reply
+            },
+            success:function(data){
+                console.log(data);
+
+            }
+        })
+    }
 // it's for add new avalibal appointment 
-        $scope.addApointment = function() {
-            $scope.appointmentDate = $('#addeddateappointment').val();
-            $scope.appointmentTime = $('#addedtimeappointment').val();
+$scope.addApointment = function() {
+    $scope.appointmentDate = $('#addeddateappointment').val();
+    $scope.appointmentTime = $('#addedtimeappointment').val();
             // for (var doctor=0 ; doctor < $scope.appointments.length ; doctor++){
             // 	$scope.username = $scope.appointments[doctor].username;
             // }
@@ -30,22 +51,22 @@ angular.module('app')
             })
         };
 // it will print the reserved appointments from the database
-        $scope.loadAppointments = function(name) {
-            console.log('loadAppointments run');
-            $.ajax({
-                url: '/getDoctorReservedAppointments',
-                method: 'GET',
-                dataType: 'json',
-				async: false,
-                success: function(data) {
-									console.log('++++++++++++++', data);
-                    $scope.appointments = data.reservedAppointments;
-                }
-            })
-        }
-        
+$scope.loadAppointments = function(name) {
+    console.log('loadAppointments run');
+    $.ajax({
+        url: '/getDoctorReservedAppointments',
+        method: 'GET',
+        dataType: 'json',
+        async: false,
+        success: function(data) {
+           console.log('++++++++++++++', data);
+           $scope.appointments = data.reservedAppointments;
+       }
+   })
+}
+
         //get the reviews when the page is loaded from the database
-         $scope.getreviews=function(){
+        $scope.getreviews=function(){
             $.ajax({
                 url:'/getreviws',
                 method:'GET',
@@ -58,7 +79,7 @@ angular.module('app')
             })
         }
     })
-    
+
 
     //     $scope.deleteAppointment = (appointment) => {
     //         console.log('asdasdasdasd;as;kdmas;kdmja;sj', appointment)
@@ -74,7 +95,7 @@ angular.module('app')
     //             }
     //         })
     //     }
-   
+
     .component('admin', {
         controller: "adminCtrl",
         templateUrl: `./views/admin.html`

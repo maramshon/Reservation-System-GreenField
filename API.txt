@@ -18,6 +18,7 @@ reservedAppointments =
   {
     time: ,
     patientName: ,
-    patientPhone:
+    patientPhone:,
+    patientCase:
   }
 ]

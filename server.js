@@ -152,8 +152,10 @@ app.post('/signup', upload.any(), function(req, res) {
         password: req.body.password,
         phoneNumber: req.body.phoneNumber,
         specilization: req.body.specilization,
+
         // image: req.files[0].filename,
         location:req.body.location
+
     };
     console.log(adduser.image);
     var user = new db(adduser);
@@ -191,13 +193,15 @@ app.put('/addAppointments', function(req, res) {
 });
 
 // Reserve an appointment from client 
-app.put("/reservedappointments", function(req, res) {
+app.put('/reservedappointments', function(req, res) {
     console.log('req.body ------->', req.body)
     var fullAppointment = req.body.reservedAppointment.availableAppointments.split(' ');
     var theAppointment = {
       time: fullAppointment[0],
-      date: fullAppointment[1]
+      date: fullAppointment[1],
+      // case: req.body.availableAppointments.case  
   }
+  console.log('-----------------------req.body.reservedAppointment.availableAppointments----------->',fullAppointment)
   req.body.reservedAppointment.availableAppointments = theAppointment;
   db.update({
     username: req.body.username
@@ -230,6 +234,35 @@ app.put("/reservedappointments", function(req, res) {
 })
   res.send("updateUser")
 })
+
+app.post('/sendReview',function(req,res){
+    var review=req.body.review;
+      db.update({
+    username: req.body.username
+}, {
+    $push: {
+        reviews:review
+    }
+},function(err,data){
+    if(err){
+        console.log(err)
+    } else {
+        console.log('updated user: ',data)
+    }
+})
+})
+
+app.get('/getreviws',function(req,res){
+    db.findOne({
+        username:req.session.username
+    },function(err,data){
+        if(err){
+            console.log(err);
+        }
+            console.log(err);
+            res.send(data);
+    })
+}) 
 
 
  // delete reserved appoinment 
@@ -264,7 +297,7 @@ app.put("/reservedappointments", function(req, res) {
 
 
 //************************************
-// listen to port 2036 
+// listen to port 3000 
 var port = process.env.PORT || 3000
 app.listen(port, () => {
     console.log('Server listening on port ', port)

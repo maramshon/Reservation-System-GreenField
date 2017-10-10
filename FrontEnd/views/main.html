@@ -3,7 +3,40 @@
     <ul>
 
       <input class="form-control w3-animate-zoom" id="search" type="text" ng-model="search"  placeholder="Search..">
+<!--            <div>
+      <input type="text" placeholder="type your name to get replies" ng-model="pname" required/>
+      <button>Get replies</button>
+    </div> -->
     </ul>
+    <div class="container">
+  <!-- Trigger the modal with a button -->
+  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Get replies</button>
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+                    <input type="text" placeholder="Your name here.." ng-model="pname" required/>
+                  <!-- display-replies -->
+                 <div>
+                   <ul>
+                     
+                   </ul>
+                 </div>
+                  
+        </div>
+        <div class="modal-footer">
+
+          <button type="button" class="btn btn-default" ng-click="recieveReply()" ng-init="loadPage()" >GET</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
     <br></nav>
   </center>
   <!-- Styling for search -->

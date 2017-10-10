@@ -193,7 +193,7 @@ app.put('/addAppointments', function(req, res) {
 });
 
 // Reserve an appointment from client 
-app.put("/reservedappointments", function(req, res) {
+app.put('/reservedappointments', function(req, res) {
     console.log('req.body ------->', req.body)
     var fullAppointment = req.body.reservedAppointment.availableAppointments.split(' ');
     var theAppointment = {
